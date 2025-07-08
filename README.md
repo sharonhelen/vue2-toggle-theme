@@ -1,4 +1,4 @@
-# vue-toggle-theme
+# vue2-toggle-theme
 
 ## Project setup
 ```
