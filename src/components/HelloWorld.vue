@@ -1,11 +1,14 @@
 <template>
   <a-layout style="height: 100%">
-    <a-layout-sider theme="dark">
+    <a-layout-sider
+      theme="dark"
+    >
       <a-menu
         :default-selected-keys="['1']"
         :default-open-keys="['sub1']"
         :inline-collapsed="collapsed"
         theme="dark"
+        :style="{height: '100%'}"
       >
         <a-menu-item key="1">
           <a-icon type="pie-chart" />
@@ -43,29 +46,46 @@
     </a-layout-sider>
     <a-layout-content>
       <a-space>
-        <a-button type="primary" @click="changeTheme('default')">白蓝</a-button>
-        <a-button type="link" @click="changeTheme('dark')">黑金</a-button>
+        <a-button @click="changeTheme('default')">白蓝</a-button>
+        <a-button @click="changeTheme('dark')">黑金</a-button>
       </a-space>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script>
-import { themes } from "@/theme/theme";
+const { getTheme } = require('../theme/theme')
 export default {
   name: "HelloWorld",
   props: {
     msg: String,
   },
+  data() {
+    return {
+      theme: 'default',
+    }
+  },
   methods: {
     changeTheme(type) {
-      const theme = themes[type];
+      this.theme = type
+      const theme = getTheme(type);
       const vars = theme["colors"];
-      console.log(64, vars)
       window.less.modifyVars(vars).then(res => {
-        console.log(66, res)
+        console.log(66, res, vars)
       })
     },
+    loadTheme(name) {
+      const id = 'antd-theme';
+      let link = document.getElementById(id);
+      if (!link) {
+        link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+      }
+      link.href = `/theme-${name}.css`;
+      localStorage.setItem('theme', name);
+    }
   },
 };
 </script>
